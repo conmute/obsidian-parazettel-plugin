@@ -8,7 +8,7 @@
 * [ ] Create a folder note with name `YYYYMMDD-<%=snakecaseEscape(title) %>/YYYYMMDD-<%=snakecaseEscape(title) %>.md` for fodlered notes
 * [ ] Process INBOX folder: skip/approve/delete to ZETTELKASTEN folder
 * [ ] Create a hubbed note under HUBS folder
-* [ ] On INBOX `approve` move from INBOX to NOTES folder under `NOTES/<hubname>/` folder
+* [ ] If note has HUB: On INBOX `approve` move from INBOX to NOTES folder under `NOTES/<hubname>/` folder
 
 ## Ideas
 

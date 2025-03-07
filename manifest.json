@@ -1,11 +1,11 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
+	"id": "parazettel",
+	"name": "P.A.R.A and Zettelkasten",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"description": "Opinionated way how to create efficient note and have a solid structure for notes reuse.",
+	"author": "Ross Wish",
+	"authorUrl": "https://github.com/conmute",
+	"fundingUrl": "https://github.com/conmute/obsidian-parazettel-plugin$0",
 	"isDesktopOnly": false
 }

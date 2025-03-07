@@ -1,0 +1,9 @@
+{
+    "templateZettelkastenInbox": "99 Utility/parazettel/zettelkasten.md",
+    "templateZettelkastenHub": "99 Utility/parazettel/zettelkasten_hub.md",
+    "pathNodesCollection": "00 MAPS OF CONTENT/00 Hubs",
+    "pathZettelkastenInbox": "11 INBOX",
+    "pathZettelkasten": "21 ZETTELKASTEN",
+    "pathZettelkastenNotesGroup": "22 NOTES",
+    "pathArchive": "81 ARCHIVE"
+}

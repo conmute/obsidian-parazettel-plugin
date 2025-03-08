@@ -1,4 +1,5 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import * as moment from 'moment';
 
 // Remember to rename these classes and interfaces!
 
@@ -14,6 +15,7 @@ export default class MyPlugin extends Plugin {
 	settings: MyPluginSettings;
 
 	async onload() {
+		console.log("HERE")
 		await this.loadSettings();
 
 		// This creates an icon in the left ribbon.
@@ -33,7 +35,7 @@ export default class MyPlugin extends Plugin {
 			id: 'open-sample-modal-simple',
 			name: 'Open sample modal (simple)',
 			callback: () => {
-				new SampleModal(this.app).open();
+				new SampleModal(this.app, this).open();
 			}
 		});
 		// This adds an editor command that can perform some operation on the current editor instance
@@ -56,7 +58,7 @@ export default class MyPlugin extends Plugin {
 					// If checking is true, we're simply "checking" if the command can be run.
 					// If checking is false, then we want to actually perform the operation.
 					if (!checking) {
-						new SampleModal(this.app).open();
+						new SampleModal(this.app, this).open();
 					}
 
 					// This command will only show up in Command Palette when the check function returns true
@@ -89,17 +91,45 @@ export default class MyPlugin extends Plugin {
 	async saveSettings() {
 		await this.saveData(this.settings);
 	}
+
+    async createFileWithTitle(title: string) {
+        const sanitizedTitle = title.replace(/[^a-zA-Z0-9_-]/g, '');
+        const dateStr = moment().format('YYYYMMDD');
+        const filename = `${sanitizedTitle}_${dateStr}.md`;
+        const filePath = `path/to/vault/${filename}`;
+
+        try {
+            const file = await this.app.vault.create(filePath, '');
+            const leaf = this.app.workspace.getLeaf(true);
+            await leaf.openFile(file);
+        } catch (error) {
+            new Notice('Failed to create file');
+            console.error(error);
+        }
+    }
 }
 
 class SampleModal extends Modal {
-	constructor(app: App) {
+	plugin: MyPlugin;
+	constructor(app: App, plugin: MyPlugin) {
 		super(app);
+        this.plugin = plugin;
 	}
 
-	onOpen() {
-		const {contentEl} = this;
-		contentEl.setText('Woah!');
-	}
+    onOpen() {
+        const {contentEl} = this;
+        contentEl.createEl('h2', {text: 'Enter Title'});
+
+        const inputEl = contentEl.createEl('input', {type: 'text'});
+        inputEl.addClass('title-input');
+
+        const submitButton = contentEl.createEl('button', {text: 'Submit'});
+        submitButton.addEventListener('click', async () => {
+            const title = inputEl.value;
+            await this.plugin.createFileWithTitle(title);
+            this.close();
+        });
+    }
 
 	onClose() {
 		const {contentEl} = this;

@@ -22,6 +22,10 @@
 		"typescript": "4.7.4"
 	},
 	"dependencies": {
+		"@silentvoid13/rusty_engine": "^0.4.0",
+		"@types/lodash": "^4.17.16",
+		"handlebars": "^4.7.8",
+		"lodash": "^4.17.21",
 		"moment": "^2.30.1"
 	}
 }

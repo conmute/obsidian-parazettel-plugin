@@ -1,14 +1,37 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
-import * as moment from 'moment';
+import {
+	App,
+	Editor,
+	MarkdownView,
+	Modal,
+	Notice,
+	Plugin,
+	PluginSettingTab,
+	Setting,
+	type TFile 
+} from 'obsidian';
+import moment from 'moment';
+import _ from 'lodash';
 
 // Remember to rename these classes and interfaces!
 
 interface MyPluginSettings {
-	mySetting: string;
+	templateZettelkastenInbox: string;
+    templateZettelkastenHub: string;
+    pathHubs: string;
+    pathZettelkastenInbox: string;
+    pathZettelkasten: string;
+    pathZettelkastenHubs: string;
+    pathArchive: string;
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: 'default'
+    templateZettelkastenInbox: "99 Utility/parazettel/zettelkasten.md",
+    templateZettelkastenHub: "99 Utility/parazettel/zettelkasten_hub.md",
+    pathHubs:  "00 MAPS OF CONTENT/00 Hubs",
+    pathZettelkastenInbox: "11 INBOX",
+    pathZettelkasten: "21 Zettelkasten",
+    pathZettelkastenHubs: "22 NOTES",
+    pathArchive: "81 ARCHIVE",
 }
 
 export default class MyPlugin extends Plugin {
@@ -92,14 +115,34 @@ export default class MyPlugin extends Plugin {
 		await this.saveData(this.settings);
 	}
 
-    async createFileWithTitle(title: string) {
+    async createFileWithTitle(title: string, createFolderNote: boolean) {
         const sanitizedTitle = title.replace(/[^a-zA-Z0-9_-]/g, '');
         const dateStr = moment().format('YYYYMMDD');
-        const filename = `${sanitizedTitle}_${dateStr}.md`;
-        const filePath = `path/to/vault/${filename}`;
+		const id = `${dateStr}_${sanitizedTitle}`;
+        const filename = `${id}.md`;
+		const filePath = createFolderNote
+			? `${this.settings.pathZettelkastenInbox}/${id}/${filename}`
+			: `${this.settings.pathZettelkastenInbox}/${filename}`;
 
         try {
-            const file = await this.app.vault.create(filePath, '');
+            const templateContent = await this.app.vault.read(await this.app.vault.getAbstractFileByPath(this.settings.templateZettelkastenInbox) as TFile);
+            const template = _.template(templateContent);
+            const renderedContent = template({ 
+                file: {
+					filename,
+                    title,
+                    path: filePath,
+					date: moment().format('YYYY-MM-DD HH:mm:ss'),
+                },
+				id,
+                moment: moment,
+            });
+
+			if (createFolderNote) {
+				await this.app.vault.createFolder(`${this.settings.pathZettelkastenInbox}/${id}`);
+			}
+
+            const file = await this.app.vault.create(filePath, renderedContent);
             const leaf = this.app.workspace.getLeaf(true);
             await leaf.openFile(file);
         } catch (error) {
@@ -123,11 +166,24 @@ class SampleModal extends Modal {
         const inputEl = contentEl.createEl('input', {type: 'text'});
         inputEl.addClass('title-input');
 
+        const checkboxEl = contentEl.createEl('input', {type: 'checkbox'});
+        checkboxEl.addClass('folder-note-checkbox');
+        contentEl.createEl('label', {text: 'Create folder note'}).prepend(checkboxEl);
+
+
         const submitButton = contentEl.createEl('button', {text: 'Submit'});
-        submitButton.addEventListener('click', async () => {
+        const submitHandler = async () => {
             const title = inputEl.value;
-            await this.plugin.createFileWithTitle(title);
+            const createFolderNote = checkboxEl.checked;
+            await this.plugin.createFileWithTitle(title, createFolderNote);
             this.close();
+        };
+
+        submitButton.addEventListener('click', submitHandler);
+        inputEl.addEventListener('keypress', async (event) => {
+            if (event.key === 'Enter') {
+                await submitHandler();
+            }
         });
     }
 
@@ -151,13 +207,24 @@ class SampleSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc('It\'s a secret')
+			.setName('Zettelkasten Inbox Path')
+			.setDesc('Create new zettels in this folder')
 			.addText(text => text
-				.setPlaceholder('Enter your secret')
-				.setValue(this.plugin.settings.mySetting)
+				.setPlaceholder('Put a path here with / delimiter')
+				.setValue(this.plugin.settings.pathZettelkastenInbox)
 				.onChange(async (value) => {
-					this.plugin.settings.mySetting = value;
+					this.plugin.settings.pathZettelkastenInbox = value;
+					await this.plugin.saveSettings();
+				}));
+		
+		new Setting(containerEl)
+			.setName('Zettelkasten Inbox Template File')
+			.setDesc('Template file which will be used as base each time')
+			.addText(text => text
+				.setPlaceholder('Put a path here with / delimiter to the template')
+				.setValue(this.plugin.settings.templateZettelkastenInbox)
+				.onChange(async (value) => {
+					this.plugin.settings.templateZettelkastenInbox = value;
 					await this.plugin.saveSettings();
 				}));
 	}

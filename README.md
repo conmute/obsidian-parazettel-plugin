@@ -4,8 +4,8 @@
 
 ## TODO for Concept level
 
-* [ ] Create note with name `YYYYMMDD-<%=snakecaseEscape(title) %>.md` in configured INBOX folder
-* [ ] Create a folder note with name `YYYYMMDD-<%=snakecaseEscape(title) %>/YYYYMMDD-<%=snakecaseEscape(title) %>.md` for fodlered notes
+* [v] Create note with name `YYYYMMDD-<%=snakecaseEscape(title) %>.md` in configured INBOX folder
+* [v] Create a folder note with name `YYYYMMDD-<%=snakecaseEscape(title) %>/YYYYMMDD-<%=snakecaseEscape(title) %>.md` for fodlered notes
 * [ ] Process INBOX folder: skip/approve/delete to ZETTELKASTEN folder
 * [ ] Create a hubbed note under HUBS folder
 * [ ] If note has HUB: On INBOX `approve` move from INBOX to NOTES folder under `NOTES/<hubname>/` folder

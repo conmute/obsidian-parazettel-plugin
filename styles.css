@@ -6,3 +6,27 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+.pz-modal-container {
+    color: red;
+}
+
+.pz-title-input {
+    margin-bottom: 10px;
+}
+
+.pz-checkbox-container {
+    /* left blank */
+}
+
+.pz-checkbox-container {
+    margin-bottom: 10px;
+}
+
+.pz-folder-note-checkbox {
+    margin-right: 10px;
+}
+
+.pz-submit-button {
+    margin-top: 10px;
+}

@@ -161,17 +161,19 @@ class SampleModal extends Modal {
 
     onOpen() {
         const {contentEl} = this;
-        contentEl.createEl('h2', {text: 'Enter Title'});
+        contentEl.createEl('h2', {text: 'Note Title'});
+		contentEl.addClass('pz-modal-container');
 
         const inputEl = contentEl.createEl('input', {type: 'text'});
-        inputEl.addClass('title-input');
+        inputEl.addClass('pz-title-input');
 
-        const checkboxEl = contentEl.createEl('input', {type: 'checkbox'});
-        checkboxEl.addClass('folder-note-checkbox');
-        contentEl.createEl('label', {text: 'Create folder note'}).prepend(checkboxEl);
-
+        const checkboxContainer = contentEl.createDiv({ cls: 'pz-checkbox-container' });
+        const checkboxEl = checkboxContainer.createEl('input', {type: 'checkbox'});
+        checkboxEl.addClass('pz-folder-note-checkbox');
+        checkboxContainer.createEl('label', {text: 'Create folder note'}).prepend(checkboxEl);
 
         const submitButton = contentEl.createEl('button', {text: 'Submit'});
+		submitButton.addClass('pz-submit-button');
         const submitHandler = async () => {
             const title = inputEl.value;
             const createFolderNote = checkboxEl.checked;

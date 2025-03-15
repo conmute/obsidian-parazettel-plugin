@@ -25,3 +25,7 @@ rotate (create dated subfolder, where we can continue writing!)
 * Area, from P.A.R.A., add area template structure example...
 * Resources, from P.A.R.A., add resource template structure example...
 * Archive, from P.A.R.A, add Archive logic to handle moving any possible note into corresponding folder and time range delimiter
+
+For Project/Area/Resources when editing have a hashmap differences calculate changed files. Then at main project/area/resource file have a command to write an update to made changes, therefore keep track of changes that has been made. Or so called log! It wont be gitlike, but at least history of changes. It can be helpfull when adding / updating notes on a subject as long as we are going to work about it.
+
+For Project, setup its in a way that it can have todos there, and have a genereted action lists which can be processed accordingly. Therefore we might have an todo inbox, just a collection where we just keep it in todo list or move them to the project. And have a single view on them. Hard dependency on dataview here
